@@ -71,38 +71,38 @@ sub admin {
 
     my ($self, $mess) = @_;
 
-	my $channel = $mess->channel;
-	return undef if $channel eq 'msg';
+    my $channel = $mess->channel;
+    return undef if $channel eq 'msg';
 
     # get the del.icio.us object 
     my $del = $self->{_delicious}->{$channel};
 
     # bah we don't have one - try and make one (default to all)
-	foreach my $c (($channel, 'all')) {
-		last if $del;
-		my $user = $self->get("username_$c");
-		my $pass = $self->get("password_$c");
-		next unless defined $user && defined $pass;
-		$del = Net::Delicious->new({user=>$user, pswd=>$pass});
-		$self->{_delicious}->{$c} = $del if $del;
-	}	
+    foreach my $c (($channel, 'all')) {
+        last if $del;
+        my $user = $self->get("username_$c");
+        my $pass = $self->get("password_$c");
+        next unless defined $user && defined $pass;
+        $del = Net::Delicious->new({user=>$user, pswd=>$pass});
+        $self->{_delicious}->{$c} = $del if $del;
+    }    
 
-	return undef unless $del;
+    return undef unless $del;
 
     for (list_uris($mess->{body})) {
         my $title = title($_);
-		$mess->{body} =~ m!\s+#\s*(.+?)\s*$!;
-		my $desc = $1 || "";
-		my $date = strftime("%FT%TZ", localtime);
-		$del->add_post({ url         => $_, 
+        $mess->{body} =~ m!\s+#\s*(.+?)\s*$!;
+        my $desc = $1 || "";
+        my $date = strftime("%FT%TZ", localtime);
+        $del->add_post({ url         => $_, 
                          title       => $title,
                          description => $desc,
                          dt          => $date, 
-					   });         
-	}
+                       });         
+    }
 
-	return undef; # Delcious.pm is passive, and doesn't intercept things.
-	
+    return undef; # Delcious.pm is passive, and doesn't intercept things.
+    
 }
 
 1;
