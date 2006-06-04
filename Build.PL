@@ -5,7 +5,7 @@ use strict;
 use Module::Build;
 
 Module::Build->new(
-    module_name => 'Bot::BasicBot::Pluggable::Module:::Delicious',
+    module_name => 'Bot::BasicBot::Pluggable::Module::Delicious',
     license => 'perl',
     requires => {
       'Net::Delicious'           => '0',
